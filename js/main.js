@@ -1,4 +1,5 @@
-const DESCRIPTION = [
+const SIMILAR_POST_COUNT = 25;
+const DESCRIPTIONS = [
   'утреннее фото',
   'красота',
   'случайное фото',
@@ -10,7 +11,7 @@ const DESCRIPTION = [
   'красота да и только',
   'скучаю..'
 ];
-const MESSAGE = [
+const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -18,57 +19,49 @@ const MESSAGE = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
-const NAME = [
+const USER_NAMES = [
   'Артём',
   'Игорь',
   'Иван',
   'Павел',
   'Костя'
 ];
-const SIMILAR_POST_COUNT = 25;
-const SIMILAR_COMMENT_COUNT = 2;
-// Генератор случайных чисел из переданного диапазона
+
 function getRandomNumberFromRange (min, max) {
   if ((min >= max) || (min < 0)) {
     throw new Error ('первое число должно быть меньше второго, оба числа должны быть положительными');
   }
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
-// Генератор случайных неповторяющихся чисел из диапазона
-function getRandomIdFromRange (min, max) {
-  const previousValues = [];
-  return function () {
-    let currentValue = getRandomNumberFromRange(min, max);
-    while (previousValues.includes(currentValue)) {
-      currentValue = getRandomNumberFromRange(min, max);
-    }
-    previousValues.push(currentValue);
-    return currentValue;
-  };
-}
-const generatePhotoId = getRandomIdFromRange (1, 25);
-const generateCommentId = getRandomIdFromRange (1, 200);
-//Генератор рандомного элемента массива
+
 const getRandomArrayElement = (arr) => arr[getRandomNumberFromRange(0, arr.length - 1)];
-//Генератор объекта комментария
-const createKeksogramComment = () => ({
-  id: generateCommentId(),
-  avatar: `img/avatar-${getRandomNumberFromRange(1, 6)}.svg`,
-  message: getRandomArrayElement(MESSAGE),
-  name: getRandomArrayElement(NAME)
-});
-  // Создание массива комментариев из рандомно сгенерированных объектов
-const similarComment = () => (
-  Array.from({length: SIMILAR_COMMENT_COUNT}, createKeksogramComment)
-);
-  // Генератор объекта поста
-const createKeksogramPost = () => ({
-  id: generatePhotoId(),
-  url: `photos/${generatePhotoId()}.jpg`,
-  description: getRandomArrayElement(DESCRIPTION),
-  likes: getRandomNumberFromRange(15, 200),
-  comments: similarComment()
-});
-  // Создание массива постов из рандомно сгенерированных объектов
-const similarPost = Array.from({length: SIMILAR_POST_COUNT}, createKeksogramPost);
-console.log(similarPost);
+
+const createComments = (commentCount) => {
+  const result = [];
+
+  for (let i = 1; i <= commentCount; i++) {
+    result.push({
+      id: i,
+      avatar: `img/avatar-${getRandomNumberFromRange(1, 6)}.svg`,
+      message: getRandomArrayElement(MESSAGES),
+      name: getRandomArrayElement(USER_NAMES)
+    });
+  }
+  return result;
+};
+
+const createPosts = (postCount) => {
+  const result = [];
+
+  for (let i = 1; i <= postCount; i++) {
+    result.push({
+      id: i,
+      url: `photos/${i}.jpg`,
+      description: getRandomArrayElement(DESCRIPTIONS),
+      likes: getRandomNumberFromRange(15, 200),
+      comments: createComments(getRandomNumberFromRange(2,10))
+    });
+  }
+  return result;
+};
+createPosts(SIMILAR_POST_COUNT);
