@@ -1,2 +1,3 @@
 import {createPosts, SIMILAR_POST_COUNT} from './generate-data.js';
-(createPosts(SIMILAR_POST_COUNT));
+import {renderPosts} from './render-data.js';
+renderPosts (createPosts(SIMILAR_POST_COUNT));
