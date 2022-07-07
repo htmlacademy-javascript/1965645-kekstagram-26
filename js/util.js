@@ -6,4 +6,6 @@ function getRandomNumberFromRange (min, max) {
 }
 
 const getRandomArrayElement = (arr) => arr[getRandomNumberFromRange(0, arr.length - 1)];
-export {getRandomNumberFromRange, getRandomArrayElement};
+
+const isEscapeKey = (evt) => evt.key === 'Escape';
+export {getRandomNumberFromRange, getRandomArrayElement, isEscapeKey};
