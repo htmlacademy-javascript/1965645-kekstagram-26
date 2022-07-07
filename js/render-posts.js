@@ -9,9 +9,18 @@ const renderPosts = (postData) => {
     similarPicture.querySelector('.picture__img').src = post.url;
     similarPicture.querySelector('.picture__comments').textContent = post.comments.length;
     similarPicture.querySelector('.picture__likes').textContent = post.likes;
+    similarPicture.dataset.postId = post.id;
     similarPicturesFragment.appendChild(similarPicture);
   });
   pictureBox.appendChild(similarPicturesFragment);
 };
 
-export {renderPosts};
+const bindPostClickListener = (callback) => {
+  pictureBox.addEventListener('click', (evt) => {
+    const similarPicture = evt.target.closest('.picture');
+    if (similarPicture) {
+      callback(similarPicture.dataset.postId);
+    }
+  });
+};
+export {renderPosts, bindPostClickListener};
