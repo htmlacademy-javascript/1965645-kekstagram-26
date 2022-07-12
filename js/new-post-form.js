@@ -1,23 +1,21 @@
-import {isEscapeKey} from './util.js';
+import { isEscapeKey } from './util.js';
 const MAX_COMMENT_LENGTH = 140;
+const RE_HASHTAG = /(^#[A-Za-zА-Яа-яЁё0-9]{1,20}\b\s?)((\b\s#[A-Za-zА-Яа-яЁё0-9]{1,20}\b\s?){1,4})?$/;
 const uploadForm = document.querySelector('.img-upload__form');
 const editForm = uploadForm.querySelector('.img-upload__overlay');
 const uploadFileButton = uploadForm.querySelector('.img-upload__input');
 const closeFormButton = uploadForm.querySelector('.img-upload__cancel');
-const uploadFileForm = uploadForm.querySelector('#upload-file');
-const postHashtag = uploadFileForm.querySelector('.text__hashtags');
-const postDescription = uploadFileForm.querySelector('.text__description');
-
-const reHashtag = /(^#[A-Za-zА-Яа-яЁё0-9]{1,20}\b\s?)((\b\s#[A-Za-zА-Яа-яЁё0-9]{1,20}\b\s?){1,4})?$/;
+const postHashtag = uploadForm.querySelector('.text__hashtags');
+const postDescription = uploadForm.querySelector('.text__description');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'text-error',
+  errorTextClass: 'text-error'
 });
 
 const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
-const validateHashtag = (value) => reHashtag.test(value);
+const validateHashtag = (value) => RE_HASHTAG.test(value);
 const validateRepeatingHashtags = (value) => {
   if(!value) {
     return true;
@@ -42,11 +40,15 @@ const closeImageForm = () => {
   pristine.reset();
 };
 function handleKeydown (evt) {
-  if(isEscapeKey(evt)) {
-    closeImageForm();
+  if (!isEscapeKey(evt)) {
+    return;
   }
+  if (evt.target.matches('input')) {
+    return;
+  }
+  closeImageForm();
 }
-const openImageForm = () => {
+const initPostForm = () => {
   uploadFileButton.addEventListener('change', () => {
     editForm.classList.remove('hidden');
     document.body.classList.add('modal-open');
@@ -54,4 +56,4 @@ const openImageForm = () => {
     window.addEventListener('keydown', handleKeydown);
   });
 };
-export {openImageForm};
+export { initPostForm };
