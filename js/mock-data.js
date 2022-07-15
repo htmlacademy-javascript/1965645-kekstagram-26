@@ -50,7 +50,7 @@ const createPosts = (postCount) => {
       url: `photos/${i}.jpg`,
       description: getRandomArrayElement(DESCRIPTIONS),
       likes: getRandomNumberFromRange(15, 200),
-      comments: createComments(getRandomNumberFromRange(2,10))
+      comments: createComments(getRandomNumberFromRange(2, 20))
     });
   }
   return result;
