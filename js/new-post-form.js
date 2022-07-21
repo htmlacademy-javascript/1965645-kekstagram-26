@@ -1,4 +1,7 @@
+import { sendData } from './api.js';
 import { isEscapeKey } from './util.js';
+import { showSuccessMessage, showErrorMessage } from './post-upload-messages.js';
+
 const MAX_COMMENT_LENGTH = 140;
 const RE_HASHTAG = /(^#[A-Za-zА-Яа-яЁё0-9]{1,19}\b\s?)((\b\s#[A-Za-zА-Яа-яЁё0-9]{1,19}\b\s?){1,4})?$/;
 
@@ -118,6 +121,7 @@ const uploadFileButton = uploadForm.querySelector('.img-upload__input');
 const closeFormButton = uploadForm.querySelector('.img-upload__cancel');
 const postHashtag = uploadForm.querySelector('.text__hashtags');
 const postDescription = uploadForm.querySelector('.text__description');
+const submitButton = uploadForm.querySelector('.img-upload__submit');
 
 const smallerScaleButton = uploadForm.querySelector('.scale__control--smaller');
 const biggerScaleButton = uploadForm.querySelector('.scale__control--bigger');
@@ -139,7 +143,12 @@ const pristine = new Pristine(uploadForm, {
 });
 
 const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
-const validateHashtag = (value) => RE_HASHTAG.test(value);
+const validateHashtag = (value) => {
+  if (value === '') {
+    return true;
+  }
+  return RE_HASHTAG.test(value);
+};
 const validateRepeatingHashtags = (value) => {
   if(!value) {
     return true;
@@ -207,10 +216,12 @@ effectLevelSlider.noUiSlider.on('update', () => {
   imgPreview.style.filter = `${effectValue[currentEffect]}(${effectLevelSlider.noUiSlider.get()})`;
 });
 
-uploadForm.addEventListener('submit', (evt) => {
-  if(!pristine.validate()) {
-    evt.preventDefault();}
-});
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+};
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+};
 
 const closeImageForm = () => {
   editForm.classList.add('hidden');
@@ -225,11 +236,32 @@ const closeImageForm = () => {
   smallerScaleButton.removeEventListener('click', onSmallerScaleButtonClick);
   biggerScaleButton.removeEventListener('click', onBiggerScaleButtonClick);
   effectList.removeEventListener ('change', onEffectListChange);
+  uploadForm.removeEventListener('submit', onPostFormSubmit);
 
   effectLevelSlider.noUiSlider.reset();
   uploadForm.reset();
   pristine.reset();
 };
+
+function onPostFormSubmit(evt) {
+  evt.preventDefault();
+  if(!pristine.validate()) {
+    return;
+  }
+  blockSubmitButton();
+  sendData(
+    () => {
+      closeImageForm();
+      showSuccessMessage();
+      unblockSubmitButton();
+    },
+    () => {
+      showErrorMessage();
+      unblockSubmitButton();
+    },
+    new FormData(evt.target),
+  );
+}
 
 function handleKeydown (evt) {
   if (!isEscapeKey(evt)) {
@@ -250,6 +282,7 @@ const initPostForm = () => {
     smallerScaleButton.addEventListener('click', onSmallerScaleButtonClick);
     biggerScaleButton.addEventListener('click', onBiggerScaleButtonClick);
     effectList.addEventListener ('change', onEffectListChange);
+    uploadForm.addEventListener('submit', onPostFormSubmit);
 
     closeFormButton.addEventListener('click', closeImageForm);
     window.addEventListener('keydown', handleKeydown);
