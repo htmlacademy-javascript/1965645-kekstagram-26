@@ -5,52 +5,46 @@ const errorMessageTemplate = document.querySelector('#error').content.querySelec
 const closeSuccessButton = successMessageTemplate.querySelector('.success__button');
 const closeErrorButton = errorMessageTemplate.querySelector('.error__button');
 
-const closeSuccessMessage = () => {
-  document.body.removeChild(successMessageTemplate);
+let activeMessage;
 
-  closeSuccessButton.removeEventListener('click', closeSuccessMessage);
-  window.removeEventListener('keydown', handleKeydown);
-  window.removeEventListener('click', onClickOutsideBlock);
-};
-
-const closeErrorMessage = () => {
-  document.body.removeChild(errorMessageTemplate);
-
-  closeErrorButton.removeEventListener('click', closeErrorMessage);
-  window.removeEventListener('keydown', handleKeydown);
+const closeMessage = () => {
+  document.body.removeChild(activeMessage);
+  window.removeEventListener('keydown', handleKeydown, true);
   window.removeEventListener('click', onClickOutsideBlock);
 };
 
 function onClickOutsideBlock (evt) {
-  if ((evt.target === successMessageTemplate) || (evt.target === errorMessageTemplate)) {
-    closeSuccessMessage();
-    closeErrorMessage();
+  if (evt.target === activeMessage) {
+    closeMessage();
   }
 }
 
 function handleKeydown(evt) {
   if (isEscapeKey(evt)) {
     evt.stopImmediatePropagation();
-
-    closeSuccessMessage();
-    closeErrorMessage();
+    closeMessage();
   }
 }
 
-const showSuccessMessage = () => {
-  document.body.appendChild(successMessageTemplate);
-
-  closeSuccessButton.addEventListener('click', closeSuccessMessage);
-  window.addEventListener('keydown', handleKeydown);
+const bindCommonListeners = () => {
+  window.addEventListener('keydown', handleKeydown, true);
   window.addEventListener('click', onClickOutsideBlock);
 };
 
+const showSuccessMessage = () => {
+  activeMessage = successMessageTemplate;
+  document.body.appendChild(successMessageTemplate);
+
+  closeSuccessButton.addEventListener('click', closeMessage, { once: true });
+  bindCommonListeners();
+};
+
 const showErrorMessage = () => {
+  activeMessage = errorMessageTemplate;
   document.body.appendChild(errorMessageTemplate);
 
-  closeErrorButton.addEventListener('click', closeErrorMessage);
-  window.addEventListener('keydown', handleKeydown);
-  window.addEventListener('click', onClickOutsideBlock);
+  closeErrorButton.addEventListener('click', closeMessage, { once: true });
+  bindCommonListeners();
 };
 
 export { showSuccessMessage, showErrorMessage };
