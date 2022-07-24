@@ -1,13 +1,15 @@
-import { createPosts, SIMILAR_POST_COUNT } from './mock-data.js';
 import { renderPosts, bindPostClickListener } from './post-renderer.js';
 import { openBigPicture } from './fullscreen-picture.js';
 import { initPostForm } from './new-post-form.js';
+import { getData } from './api.js';
 
-const posts = createPosts(SIMILAR_POST_COUNT);
-renderPosts(posts);
-
-bindPostClickListener((postId) => {
-  const selectedPost = posts.find((post) => post.id === +postId);
-  openBigPicture(selectedPost);
-});
 initPostForm();
+
+getData((similarPosts) => {
+  renderPosts(similarPosts);
+  bindPostClickListener((postId) => {
+    const selectedPost = similarPosts.find((post) => post.id === +postId);
+    openBigPicture(selectedPost);
+  });
+});
+
