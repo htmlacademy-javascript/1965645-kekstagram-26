@@ -11,7 +11,7 @@ const MAX_SCALE_VALUE = 100;
 const MIN_SCALE_VALUE = 25;
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-const effectType = {
+const EffectType = {
   NONE: 'none',
   CHROME: 'chrome',
   SEPIA: 'sepia',
@@ -21,15 +21,15 @@ const effectType = {
 };
 
 const effectValue = {
-  [effectType.CHROME]: 'grayscale',
-  [effectType.SEPIA]: 'sepia',
-  [effectType.MARVIN]: 'invert',
-  [effectType.PHOBOS]: 'blur',
-  [effectType.HEAT]: 'brightness'
+  [EffectType.CHROME]: 'grayscale',
+  [EffectType.SEPIA]: 'sepia',
+  [EffectType.MARVIN]: 'invert',
+  [EffectType.PHOBOS]: 'blur',
+  [EffectType.HEAT]: 'brightness',
 };
 
 const effectLevelConfig = {
-  [effectType.CHROME]: {
+  [EffectType.CHROME]: {
     range: {
       min: 0,
       max: 1
@@ -46,7 +46,7 @@ const effectLevelConfig = {
       },
     }
   },
-  [effectType.SEPIA]: {
+  [EffectType.SEPIA]: {
     range: {
       min: 0,
       max: 1
@@ -63,7 +63,7 @@ const effectLevelConfig = {
       },
     }
   },
-  [effectType.MARVIN]: {
+  [EffectType.MARVIN]: {
     range: {
       min: 0,
       max: 100
@@ -80,7 +80,7 @@ const effectLevelConfig = {
       },
     }
   },
-  [effectType.PHOBOS]: {
+  [EffectType.PHOBOS]: {
     range: {
       min: 0,
       max: 3
@@ -97,7 +97,7 @@ const effectLevelConfig = {
       },
     }
   },
-  [effectType.HEAT]: {
+  [EffectType.HEAT]: {
     range: {
       min: 1,
       max: 3
@@ -206,7 +206,7 @@ const onEffectListChange = (evt) => {
     currentEffect = evt.target.value;
     imgPreview.className = `effects__preview--${currentEffect}`;
 
-    if (currentEffect !== effectType.NONE) {
+    if (currentEffect !== EffectType.NONE) {
       effectLevelSlider.noUiSlider.reset();
       effectLevelValue.value = '';
       effectLevelSlider.classList.remove ('hidden');
@@ -273,11 +273,11 @@ function onPostFormSubmit(evt) {
   );
 }
 
-function handleKeydown (evt) {
+function onKeydownClick (evt) {
   if (!isEscapeKey(evt)) {
     return;
   }
-  if (evt.target.matches('input')) {
+  if (evt.target.matches('input')&&evt.target.type === 'text' || evt.target.matches('textarea')) {
     return;
   }
   closeImageForm();
@@ -285,6 +285,7 @@ function handleKeydown (evt) {
 
 const initPostForm = () => {
   uploadFileButton.addEventListener('change', () => {
+    uploadFileButton.blur();
     uploadNewPicture();
     editForm.classList.remove('hidden');
     document.body.classList.add('modal-open');
@@ -296,7 +297,7 @@ const initPostForm = () => {
     uploadForm.addEventListener('submit', onPostFormSubmit);
 
     closeFormButton.addEventListener('click', closeImageForm);
-    window.addEventListener('keydown', handleKeydown);
+    window.addEventListener('keydown', onKeydownClick);
   });
 };
 export { initPostForm };
