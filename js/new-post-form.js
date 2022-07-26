@@ -279,7 +279,7 @@ function handleKeydown (evt) {
   if (!isEscapeKey(evt)) {
     return;
   }
-  if (evt.target.matches('input')) {
+  if (evt.target.matches('input')&&evt.target.type === 'text' || evt.target.matches('textarea')) {
     return;
   }
   closeImageForm();
