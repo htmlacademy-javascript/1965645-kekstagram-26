@@ -234,8 +234,6 @@ const unblockSubmitButton = () => {
 };
 
 const closeImageForm = () => {
-  uploadFileButton.removeEventListener('change', uploadNewPicture);
-  imgPreview.classList.value = null;
   editForm.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
@@ -286,8 +284,8 @@ function handleKeydown (evt) {
 }
 
 const initPostForm = () => {
-  uploadFileButton.addEventListener('change', uploadNewPicture);
   uploadFileButton.addEventListener('change', () => {
+    uploadNewPicture();
     editForm.classList.remove('hidden');
     document.body.classList.add('modal-open');
     imgPreview.style.filter = '';
