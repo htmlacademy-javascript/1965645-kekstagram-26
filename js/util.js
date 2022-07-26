@@ -1,14 +1,5 @@
 const ALERT_SHOW_TIME = 2000;
 
-const getRandomNumberFromRange = (min, max) => {
-  if ((min >= max) || (min < 0)) {
-    throw new Error ('первое число должно быть меньше второго, оба числа должны быть положительными');
-  }
-  return Math.floor(Math.random() * (max - min + 1) ) + min;
-};
-
-const getRandomArrayElement = (arr) => arr[getRandomNumberFromRange(0, arr.length - 1)];
-
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const showAlert = (message) => {
@@ -32,4 +23,13 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomNumberFromRange, getRandomArrayElement, isEscapeKey, showAlert};
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export {isEscapeKey, showAlert, debounce};

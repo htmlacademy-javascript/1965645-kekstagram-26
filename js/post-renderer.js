@@ -2,6 +2,7 @@ const pictureBox = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const renderPosts = (postData) => {
+  pictureBox.querySelectorAll('.picture').forEach((picture) => picture.remove());
   const similarPicturesFragment = document.createDocumentFragment();
 
   postData.forEach((post) => {

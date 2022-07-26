@@ -9,6 +9,7 @@ const DEFAULT_SCALE_VALUE = 100;
 const SCALE_STEP = 25;
 const MAX_SCALE_VALUE = 100;
 const MIN_SCALE_VALUE = 25;
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 const effectType = {
   NONE: 'none',
@@ -117,30 +118,39 @@ const effectLevelConfig = {
 
 const uploadForm = document.querySelector('.img-upload__form');
 const editForm = uploadForm.querySelector('.img-upload__overlay');
-const uploadFileButton = uploadForm.querySelector('.img-upload__input');
+const uploadFileButton = uploadForm.querySelector('#upload-file');
 const closeFormButton = uploadForm.querySelector('.img-upload__cancel');
 const postHashtag = uploadForm.querySelector('.text__hashtags');
 const postDescription = uploadForm.querySelector('.text__description');
 const submitButton = uploadForm.querySelector('.img-upload__submit');
-
 const smallerScaleButton = uploadForm.querySelector('.scale__control--smaller');
 const biggerScaleButton = uploadForm.querySelector('.scale__control--bigger');
 const scaleControlValue = uploadForm.querySelector('.scale__control--value');
 const imgPreview = uploadForm.querySelector('.img-upload__preview').querySelector('img');
-
 const effectLevelSlider = uploadForm.querySelector('.effect-level__slider');
 const effectLevelValue = uploadForm.querySelector('.effect-level__value');
 const effectLevel = uploadForm.querySelector('.effect-level');
 const effectList = uploadForm.querySelector('.effects__list');
-
-let currentScaleValue = DEFAULT_SCALE_VALUE;
-let currentEffect;
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'text-error'
 });
+
+let currentScaleValue = DEFAULT_SCALE_VALUE;
+let currentEffect;
+
+const uploadNewPicture = () => {
+  const file = uploadFileButton.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    imgPreview.src = URL.createObjectURL(file);
+  }
+};
 
 const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
 const validateHashtag = (value) => {
@@ -224,6 +234,8 @@ const unblockSubmitButton = () => {
 };
 
 const closeImageForm = () => {
+  uploadFileButton.removeEventListener('change', uploadNewPicture);
+  imgPreview.classList.value = null;
   editForm.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
@@ -274,6 +286,7 @@ function handleKeydown (evt) {
 }
 
 const initPostForm = () => {
+  uploadFileButton.addEventListener('change', uploadNewPicture);
   uploadFileButton.addEventListener('change', () => {
     editForm.classList.remove('hidden');
     document.body.classList.add('modal-open');
@@ -288,5 +301,4 @@ const initPostForm = () => {
     window.addEventListener('keydown', handleKeydown);
   });
 };
-
 export { initPostForm };
