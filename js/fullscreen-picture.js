@@ -11,6 +11,19 @@ const commentsLoader = bigPicture.querySelector('.comments-loader');
 let renderedComments = 0;
 let pictureComments;
 
+const createComment = (comment) => (
+  `
+  <li class="social__comment">
+    <img
+      class="social__picture"
+      src="${comment.avatar}"
+      alt="${comment.name}"
+      width="35" height="35">
+    <p class="social__text">${comment.message}</p>
+  </li>
+  `
+);
+
 const renderComments = () => {
   const commentsToRender = pictureComments.slice(renderedComments, renderedComments + SHOWN_COMMENTS_AMOUNT);
   let commentsData ='';
@@ -22,16 +35,7 @@ const renderComments = () => {
   }
 
   commentsToRender.forEach((comment) => {
-    commentsData += `
-    <li class="social__comment">
-      <img
-        class="social__picture"
-        src="${comment.avatar}"
-        alt="${comment.name}"
-        width="35" height="35">
-      <p class="social__text">${comment.message}</p>
-    </li>
-    `;
+    commentsData += createComment(comment);
   });
 
   socialComments.insertAdjacentHTML('beforeend', commentsData);
@@ -46,10 +50,12 @@ const closeBigPicture = () => {
 
   commentsLoader.removeEventListener ('click', renderComments);
   closeButton.removeEventListener('click', closeBigPicture);
-  window.removeEventListener('keydown', onkeydownClick);
+
+  window.removeEventListener('keydown', onKeydownClick);
 };
 
-function onkeydownClick (evt) {
+function onKeydownClick (evt) {
+
   if(isEscapeKey(evt)){
     closeBigPicture();
   }
@@ -73,7 +79,9 @@ const openBigPicture = (picture) => {
   renderComments();
 
   closeButton.addEventListener('click', closeBigPicture);
-  window.addEventListener('keydown', onkeydownClick);
+
+  window.addEventListener('keydown', onKeydownClick);
+
 
 };
 
