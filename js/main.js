@@ -2,7 +2,6 @@ import { renderPosts, bindPostClickListener } from './post-renderer.js';
 import { openBigPicture } from './fullscreen-picture.js';
 import { initPostForm } from './new-post-form.js';
 import { getData } from './api.js';
-
 import { applyFilter, bindImgFilterListeners, showFilters, FilterType } from './filters.js';
 
 initPostForm();

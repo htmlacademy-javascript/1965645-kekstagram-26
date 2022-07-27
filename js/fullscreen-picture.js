@@ -50,10 +50,12 @@ const closeBigPicture = () => {
 
   commentsLoader.removeEventListener ('click', renderComments);
   closeButton.removeEventListener('click', closeBigPicture);
+
   window.removeEventListener('keydown', onKeydownClick);
 };
 
 function onKeydownClick (evt) {
+
   if(isEscapeKey(evt)){
     closeBigPicture();
   }
@@ -77,7 +79,9 @@ const openBigPicture = (picture) => {
   renderComments();
 
   closeButton.addEventListener('click', closeBigPicture);
+
   window.addEventListener('keydown', onKeydownClick);
+
 
 };
 
