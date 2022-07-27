@@ -275,7 +275,7 @@ function onPostFormSubmit(evt) {
   );
 }
 
-function handleKeydown (evt) {
+function onKeydownClick (evt) {
   if (!isEscapeKey(evt)) {
     return;
   }
@@ -298,7 +298,7 @@ const initPostForm = () => {
     uploadForm.addEventListener('submit', onPostFormSubmit);
 
     closeFormButton.addEventListener('click', closeImageForm);
-    window.addEventListener('keydown', handleKeydown);
+    window.addEventListener('keydown', onKeydownClick);
   });
 };
 export { initPostForm };
